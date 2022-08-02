@@ -30,7 +30,18 @@ const authMiddlewares = {
             return res.sendStatus(500);
         };
     },
+    samePassword: async (req,res,next) => {
+        const {password, confirmPassword} = req.body;
+        try{
+            if(password !== confirmPassword){return res.send('A senha não é a mesma').status(422)};
 
+            next();
+        }catch(error){
+            console.log("[Error] - samePassword Middleware")
+            return res.sendStatus(500);
+        };
+    },
+    
 }
 
 export { validationMiddleware };
