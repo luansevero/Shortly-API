@@ -5,14 +5,14 @@ import { v4 as uuid } from 'uuid';
 
 const validationMiddleware = {
     signUp : (req,res,next) => {
-        const customer = req.body;
-        const validation = signUpSchema.validate(customer);
+        const user = req.body;
+        const validation = signUpSchema.validate(user);
         if(validation.error){return res.send(validation.error).status(422)};
         next();
     },
     signIn : (req,res,next) => {
-        const costumer = req.body;
-        const validation = signInSchema.validate(costumer);
+        const user = req.body;
+        const validation = signInSchema.validate(user);
         if(validation.error){return res.send(validation.error).status(422)};
         next();
     }
@@ -59,11 +59,11 @@ const authMiddlewares = {
     isTheUser: async (req,res,next) => {
         const { email, password } = req.body;
         try{
-            const customer = await connection.query(`SELECT id FROM users WHERE email=$1`, [email]);
-            const isPasswordRight = bycrypt.compareSync(password, customer.password);
-            if(!customer || !isPasswordRight){return res.sendStatus(401)};
+            const user = await connection.query(`SELECT id, password FROM users WHERE email=$1`, [email]);
+            const isPasswordRight = bycrypt.compareSync(password, user.password);
+            if(!user || !isPasswordRight){return res.sendStatus(401)};
 
-            res.locals.userId = customer
+            res.locals.userId = user.id
             next();
         }catch(error){
             console.log("[Error] - isPasswordRight Middleware")
