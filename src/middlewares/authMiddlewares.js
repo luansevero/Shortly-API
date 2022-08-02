@@ -1,7 +1,6 @@
 import connection from "../setup/database.js";
 import { signUpSchema, signInSchema } from "../schemas/authSchema.js";
 import bycrypt from 'bcrypt';
-import { v4 as uuid } from 'uuid';
 
 const validationMiddleware = {
     signUp : (req,res,next) => {

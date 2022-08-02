@@ -21,7 +21,7 @@ const authController = {
         }
     },
     signIn: async (req,res) => {
-        const { customerId } = res.locals;
+        const { userId } = res.locals;
         try{
             const token = uuid();
             await connection.query(`
@@ -29,7 +29,7 @@ const authController = {
             ("userId", token)
             VALUES
             ($1, $2)`,
-            [customerId, token]
+            [userId, token]
             );
 
             res.sendStatus(201);
