@@ -56,13 +56,14 @@ const authMiddlewares = {
             return res.sendStatus(500);
         };
     },
-    isPasswordRight: async (req,res,next) => {
+    isTheUser: async (req,res,next) => {
         const { email, password } = req.body;
         try{
-            const customer = await connection.query(`SELECT * FROM users WHERE email=$1`, [email]);
+            const customer = await connection.query(`SELECT id FROM users WHERE email=$1`, [email]);
             const isPasswordRight = bycrypt.compareSync(password, customer.password);
             if(!customer || !isPasswordRight){return res.sendStatus(401)};
 
+            res.locals.userId = customer
             next();
         }catch(error){
             console.log("[Error] - isPasswordRight Middleware")
