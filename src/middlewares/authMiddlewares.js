@@ -68,7 +68,7 @@ const authMiddlewares = {
             console.log("[Error] - isPasswordRight Middleware")
             return res.sendStatus(500);
         };
-    };
+    }
 }
 
-export { validationMiddleware };
+export { validationMiddleware, authMiddlewares };
