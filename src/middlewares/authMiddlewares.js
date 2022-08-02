@@ -1,5 +1,7 @@
 import connection from "../setup/database.js";
 import { signUpSchema, signInSchema } from "../schemas/authSchema.js";
+import bycrypt from 'bcrypt';
+import { v4 as uuid } from 'uuid';
 
 const validationMiddleware = {
     signUp : (req,res,next) => {
@@ -41,7 +43,19 @@ const authMiddlewares = {
             return res.sendStatus(500);
         };
     },
-    
+    encryptingPassword: async (req,res,next) => {
+        const { password } = req.body;
+        try{
+            const passwordHash = bycrypt.hashSync(password, 10);
+            
+            res.locals.passwordHash = passwordHash;
+
+            next();
+        }catch(error){
+            console.log("[Error] - encryptingPassword Middleware")
+            return res.sendStatus(500);
+        };
+    }
 }
 
 export { validationMiddleware };
