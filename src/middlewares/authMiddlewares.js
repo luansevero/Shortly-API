@@ -12,6 +12,7 @@ const isNewUser = async (req, res, next) => {
         return res.sendStatus(500);
     };
 };
+
 const isTheSamePassword = async (req, res, next) => {
     const { password, confirmPassword } = req.body;
     try {
@@ -22,6 +23,7 @@ const isTheSamePassword = async (req, res, next) => {
         return res.sendStatus(500);
     };
 };
+
 const encryptingPassword = async (req, res, next) => {
     const { password } = req.body;
     try {
@@ -38,17 +40,16 @@ const encryptingPassword = async (req, res, next) => {
 
 const isTheUser = async (req, res, next) => {
     const { email, password } = req.body;
-    try {
-        const user = await connection.query(`SELECT id, password FROM users WHERE email=$1`, [email]);
-        const isPasswordRight = bycrypt.compareSync(password, user.password);
-        if (!user || !isPasswordRight) { return res.sendStatus(401) };
+        const { rows:user } = await connection.query(`SELECT password FROM users WHERE email= $1`, [email]);
+        console.log(user[0].password)
+        const isPasswordRight = bycrypt.compareSync(password, user[0].password);
+        if (!user[0] || !isPasswordRight) { return res.sendStatus(401) };
 
-        res.locals.userId = user.id
         next();
-    } catch (error) {
-        console.log("[Error] - isPasswordRight Middleware")
-        return res.sendStatus(500);
-    };
+    // } catch (error) {
+    //     console.log("[Error] - isTheUser Middleware")
+    //     return res.sendStatus(500);
+    // };
 };
 
 export { isNewUser, isTheSamePassword, encryptingPassword, isTheUser };

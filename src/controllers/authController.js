@@ -1,5 +1,8 @@
 import connection from "../setup/database.js";
-import { v4 as uuid } from "uuid";
+import  jwt  from "jsonwebtoken";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const authController = {
     signUp: async (req,res) => {
@@ -21,18 +24,10 @@ const authController = {
         }
     },
     signIn: async (req,res) => {
-        const { userId } = res.locals;
+        const { email } = req.body;
         try{
-            const token = uuid();
-            await connection.query(`
-            INSERT INTO sessions
-            ("userId", token)
-            VALUES
-            ($1, $2)`,
-            [userId, token]
-            );
-
-            res.sendStatus(201);
+            const accessToken = jwt.sign(email, process.env.ACCESS_TOKEN_SECRET)
+            res.send({accessToken: accessToken})
         }catch(error){
             console.log("[Error] - signIn Controller")
             return res.sendStatus(500);
