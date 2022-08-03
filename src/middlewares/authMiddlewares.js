@@ -21,20 +21,18 @@ const authMiddlewares = {
     haveCustomer: async (req,res,next) => {
         const { email } = req.body;
         try{
-            const haveCustomer = await connection.query(`SELECT * FROM users WHERE email=$1`, [email]);
-
-            if(haveCustomer){return res.sendStatus(409)};
-
+            const { rows:user } = await connection.query(`SELECT * FROM users WHERE email=$1`, [email]);
+            if(user.length !== 0){return res.sendStatus(409)};
             next();
         }catch(error){
-            console.log("[Error] - haveCustomer Middleware")
+            console.log("[Error] - haveCostumer Middleware")
             return res.sendStatus(500);
         };
     },
     samePassword: async (req,res,next) => {
         const {password, confirmPassword} = req.body;
         try{
-            if(password !== confirmPassword){return res.send('A senha não é a mesma').status(422)};
+            if(password !== confirmPassword){return res.status(422).send('Senhas diferentes')};
 
             next();
         }catch(error){
