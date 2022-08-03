@@ -1,21 +1,7 @@
 import connection from "../setup/database.js";
-import { signUpSchema, signInSchema } from "../schemas/authSchema.js";
 import bycrypt from 'bcrypt';
 
-const validationMiddleware = {
-    signUp : (req,res,next) => {
-        const user = req.body;
-        const validation = signUpSchema.validate(user);
-        if(validation.error){return res.send(validation.error).status(422)};
-        next();
-    },
-    signIn : (req,res,next) => {
-        const user = req.body;
-        const validation = signInSchema.validate(user);
-        if(validation.error){return res.send(validation.error).status(422)};
-        next();
-    }
-};
+
 
 const authMiddlewares = {
     haveCustomer: async (req,res,next) => {
@@ -69,4 +55,4 @@ const authMiddlewares = {
     }
 }
 
-export { validationMiddleware, authMiddlewares };
+export default authMiddlewares;
