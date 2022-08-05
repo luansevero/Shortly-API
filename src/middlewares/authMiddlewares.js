@@ -49,7 +49,7 @@ const isTheUser = async (req, res, next) => {
         if(user.length === 0) return res.sendStatus(401);
         const isPasswordRight = bycrypt.compareSync(password, user[0].password);
         if (!user[0] || !isPasswordRight) return res.sendStatus(401) ;
-        res.locals.userId = user.id;
+        res.locals.userId = user[0].id;
         next();
     }catch(error) {
         console.log("[Error] - isTheUser Middleware")

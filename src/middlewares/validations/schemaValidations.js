@@ -1,13 +1,15 @@
 import { signInSchema, signUpSchema } from "../../schemas/authSchema.js";
 import { urlSchema } from "../../schemas/urlsSchema.js";
 
-const schemas = {
-    signup : signUpSchema,
-    signin : signInSchema,
-    url: urlSchema
-}
+
 
 const validationMiddleware = (route) => {
+    const schemas = {
+        signup : signUpSchema,
+        signin : signInSchema,
+        url: urlSchema
+    };
+
     return (req,res,next) => {
         const body =  req.body;
         const validation =  schemas[route].validate(body, {abortEarly: false});

@@ -7,17 +7,18 @@ const shorten = async (req,res) => {
     const shortUrl = nanoid(8);
     const queryParams = [
         userId,
-        shorten,
+        shortUrl,
         url,
         0
     ];
-    try{
+    console.log(queryParams)
+    // try{
         await newLink(queryParams);
         res.status(200).send({shortUrl: shortUrl});
-    }catch(error){
-        console.log("[Error] - shorten Controller");
-        return res.sendStatus(500);
-    };
+    // }catch(error){
+    //     console.log("[Error] - shorten Controller");
+    //     return res.sendStatus(500);
+    // };
 };
 
 const getUrlById = async (req,res) => {
