@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { newLink, increaseVisitors, haveShorten, getOneLink } from "../repositories/urlsRepo.js"
+import { newLink, increaseVisitors, haveShorten, getOneLinkById, openShortUrl } from "../repositories/urlsRepo.js"
 
 const shorten = async (req,res) => {
     const { url } = req.body;
@@ -30,8 +30,9 @@ const shorten = async (req,res) => {
 
 const getUrlById = async (req,res) => {
     const { id } = req.params;
+
     try{
-        const { rows:link } = await getOneLink([id]);
+        const { rows:link } = await getOneLinkById([id]);
         if(link.length === 0) return res.sendStatus(404);
         delete link[0].visitCount;
         delete link[0].userId;
@@ -44,14 +45,14 @@ const getUrlById = async (req,res) => {
 
 const openUrl = async (req,res) => {
     const { shortUrl } = req.params;
-    try{
-        const { rows:link } = await getOneLink('shortUlr', [shortUrl]);
-        if(link.length === 0) return res.sendStatus(404);
-        await increaseVisitors([link.id]);
 
-        res.redirect(link.url);
+    try{
+        const { rows:link } = await openShortUrl([shortUrl])
+        if(link.length === 0) return res.sendStatus(404);
+        await increaseVisitors([link[0].id]);
+        res.redirect(link[0].url)
     }catch(error){
-        console.log("[Error] - getUrlById Controller");
+        console.log("[Error] - openUrl Controller");
         return res.sendStatus(500);
     };
 }
@@ -60,7 +61,7 @@ const deleteLink = async (req,res) => {
     const { id } = req.params;
     const { userId } = res.locals;
     try{
-        const { rows:link } = await getOneLink('id', [id]);
+        const { rows:link } = await getOneLinkById([id]);
 
         if(link.length === 0) return res.sendStatus(404);
         if(link.userId !== userId) return res.sendStatus(401);
