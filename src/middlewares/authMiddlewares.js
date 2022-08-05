@@ -1,11 +1,12 @@
 import connection from "../setup/database.js";
 import bycrypt from 'bcrypt';
+import { findUser } from "../repositories/authRepo.js";
+import { query } from "express";
 
 const isNewUser = async (req, res, next) => {
     const { email } = req.body;
-    console.log(email)
     try {
-        const { rows: user } = await connection.query(`SELECT * FROM users WHERE email=$1`, [email]);
+        const { rows: user } = await findUser([email])
         if (user.length !== 0) { return res.sendStatus(409) };
         next();
     } catch (error) {
@@ -41,15 +42,20 @@ const encryptingPassword = async (req, res, next) => {
 
 const isTheUser = async (req, res, next) => {
     const { email, password } = req.body;
-        const { rows:user } = await connection.query(`SELECT password FROM users WHERE email= $1`, [email]);
+    const queryParams = [
+        email
+    ]
+    try{
+        const { rows:user } = await findUser(queryParams)
+        if(user.length === 0) return res.sendStatus(401);
         const isPasswordRight = bycrypt.compareSync(password, user[0].password);
-        if (!user[0] || !isPasswordRight) { return res.sendStatus(401) };
+        if (!user[0] || !isPasswordRight) return res.sendStatus(401) ;
 
         next();
-    // } catch (error) {
-    //     console.log("[Error] - isTheUser Middleware")
-    //     return res.sendStatus(500);
-    // };
+    }catch(error) {
+        console.log("[Error] - isTheUser Middleware")
+        return res.sendStatus(500);
+    };
 };
 
 export { isNewUser, isTheSamePassword, encryptingPassword, isTheUser };

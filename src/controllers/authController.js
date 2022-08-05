@@ -1,5 +1,3 @@
-import connection from "../setup/database.js";
-
 import  jwt  from "jsonwebtoken";
 import dotenv from 'dotenv';
 
