@@ -26,8 +26,9 @@ const authController = {
     signIn: async (req,res) => {
         const { email } = req.body;
         try{
-            const accessToken = jwt.sign(email, process.env.ACCESS_TOKEN_SECRET)
-            res.send({accessToken: accessToken})
+            const accessToken = jwt.sign({email:email}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '3d'});
+            const refreshToken = jwt.sign({email:email}, process.env.REFRESH_TOKEN_SECRET)
+            res.send({accessToken: accessToken, refreshToken: refreshToken})
         }catch(error){
             console.log("[Error] - signIn Controller")
             return res.sendStatus(500);

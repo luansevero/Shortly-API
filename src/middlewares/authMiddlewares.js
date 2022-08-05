@@ -41,7 +41,6 @@ const encryptingPassword = async (req, res, next) => {
 const isTheUser = async (req, res, next) => {
     const { email, password } = req.body;
         const { rows:user } = await connection.query(`SELECT password FROM users WHERE email= $1`, [email]);
-        console.log(user[0].password)
         const isPasswordRight = bycrypt.compareSync(password, user[0].password);
         if (!user[0] || !isPasswordRight) { return res.sendStatus(401) };
 
