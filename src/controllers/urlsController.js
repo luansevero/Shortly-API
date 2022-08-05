@@ -1,4 +1,3 @@
-import { query } from "express";
 import { nanoid } from "nanoid";
 import { newLink, increaseVisitors } from "../repositories/urlsRepo.js"
 

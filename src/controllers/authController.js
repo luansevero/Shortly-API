@@ -22,10 +22,10 @@ const authController = {
         }
     },
     signIn: async (req,res) => {
-        const { email } = req.body;
+        const { userId } = res.locals;
         try{
-            const accessToken = jwt.sign({email:email}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '3d'});
-            const refreshToken = jwt.sign({email:email}, process.env.REFRESH_TOKEN_SECRET)
+            const accessToken = jwt.sign({id:userId}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '3d'});
+            const refreshToken = jwt.sign({id:userId}, process.env.REFRESH_TOKEN_SECRET)
             res.send({accessToken: accessToken, refreshToken: refreshToken})
         }catch(error){
             console.log("[Error] - signIn Controller")
