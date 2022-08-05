@@ -1,21 +1,21 @@
 import connection from "../setup/database.js";
+
 import  jwt  from "jsonwebtoken";
 import dotenv from 'dotenv';
+
+import { newUser } from "../repositories/authRepo.js"
 
 dotenv.config();
 
 const authController = {
     signUp: async (req,res) => {
-        const { name, email } = req.body;
-        const { passwordHash } = res.locals;
+        const queryParams = Object.values({
+            name: req.body.name,
+            email: req.body.email,
+            passwordHash: res.locals.passwordHash
+        });
         try{
-            await connection.query(`
-            INSERT INTO users
-            (name, email, password)
-            VALUES
-            ($1, $2, $3)`,
-            [name, email, passwordHash]
-            );
+            newUser(queryParams);
 
             res.sendStatus(201);
         }catch(error){

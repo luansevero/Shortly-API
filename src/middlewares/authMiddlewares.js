@@ -3,8 +3,9 @@ import bycrypt from 'bcrypt';
 
 const isNewUser = async (req, res, next) => {
     const { email } = req.body;
+    console.log(email)
     try {
-        const { rows: user } = await connectionquery(`SELECT * FROM users WHERE email=$1`, [email]);
+        const { rows: user } = await connection.query(`SELECT * FROM users WHERE email=$1`, [email]);
         if (user.length !== 0) { return res.sendStatus(409) };
         next();
     } catch (error) {
