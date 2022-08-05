@@ -4,8 +4,10 @@ import { newLink, increaseVisitors } from "../repositories/urlsRepo.js"
 
 const shorten = async (req,res) => {
     const { url } = req.body;
+    const { userId } = res.locals;
     const shortUrl = nanoid(8);
     const queryParams = [
+        userId,
         shorten,
         url,
         0
@@ -25,6 +27,7 @@ const getUrlById = async (req,res) => {
         const { rows:link } = await getOneLink('id', [id]);
         if(link.length === 0) return res.sendStatus(401);
         delete link.visitCount;
+        delete link.userId;
         res.status(200).send(link);
     }catch(error){
         console.log("[Error] - getUrlById Controller");
@@ -51,7 +54,7 @@ const deleteLink = async (req,res) => {
     const { userId } = res.locals;
     try{
         const { rows:link } = await getOneLink('id', [id]);
-        
+
         if(link.length === 0) return res.sendStatus(404);
         if(link.userId !== userId) return res.sendStatus(401);
 
