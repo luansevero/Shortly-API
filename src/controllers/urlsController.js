@@ -29,8 +29,8 @@ const shorten = async (req,res) => {
 };
 
 const getUrlById = async (req,res) => {
-    const { id } = req.params;
-
+    const  id  = parseInt(req.params.id);
+    if(isNaN(id)) return res.sendStatus(404);
     try{
         const { rows:link } = await getOneLinkById([id]);
         if(link.length === 0) return res.sendStatus(404);
@@ -45,6 +45,7 @@ const getUrlById = async (req,res) => {
 
 const openUrl = async (req,res) => {
     const { shortUrl } = req.params;
+    if(shortUrl === undefined) return res.sendStatus(400);
 
     try{
         const { rows:link } = await openShortUrl([shortUrl])
@@ -60,6 +61,7 @@ const openUrl = async (req,res) => {
 const deleteLink = async (req,res) => {
     const { id } = req.params;
     const { userId } = res.locals;
+    if(isNaN(id)) return res.sendStatus(404);
     try{
         const { rows:link } = await getOneLinkById([id]);
 
