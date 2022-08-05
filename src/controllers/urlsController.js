@@ -69,7 +69,7 @@ const deleteLink = async (req,res) => {
         if(link.length === 0) return res.sendStatus(404);
         if(link[0].userId !== userId) return res.sendStatus(401);
 
-        await deleteUserLink(link[0].id);
+        await deleteUserLink([link[0].id]);
 
         res.sendStatus(204);
     }catch(error){

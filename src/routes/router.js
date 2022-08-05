@@ -1,14 +1,14 @@
 import { Router } from "express";
 import authRouter from "./authRouters.js";
 import urlRouter from "./urlsRouters.js";
-// import userRouter from "./usersRouters";
+import userRouter from "./usersRouters.js";
 // import rankinRouter from "./rankingRouters";
 
 const router = Router();
 
 router.use(authRouter);
 router.use(urlRouter);
-// router.use(userRouter);
+router.use(userRouter);
 // router.use(rankinRouter);
 
 export default router;
