@@ -8,7 +8,6 @@ const schemas = {
 const validationMiddleware = (route) => {
     return (req,res,next) => {
         const body =  req.body;
-        console.log(route)
         const validation =  schemas[route].validate(body, {abortEarly: false});
         if(validation.error){
             const details = validation.error.details;
