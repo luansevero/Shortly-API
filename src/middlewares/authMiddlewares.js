@@ -1,7 +1,6 @@
-import connection from "../setup/database.js";
 import bycrypt from 'bcrypt';
 import { findUser } from "../repositories/authRepo.js";
-import { query } from "express";
+
 
 const isNewUser = async (req, res, next) => {
     const { email } = req.body;
