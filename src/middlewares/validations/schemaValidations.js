@@ -1,8 +1,10 @@
 import { signInSchema, signUpSchema } from "../../schemas/authSchema.js";
+import { urlSchema } from "../../schemas/urlsSchema.js";
 
 const schemas = {
     signup : signUpSchema,
-    signin : signInSchema
+    signin : signInSchema,
+    url: urlSchema
 }
 
 const validationMiddleware = (route) => {
