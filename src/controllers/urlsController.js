@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { newLink, increaseVisitors, haveShorten, getOneLinkById, openShortUrl } from "../repositories/urlsRepo.js"
+import { newLink, increaseVisitors, haveShorten, getOneLinkById, openShortUrl, deleteUserLink } from "../repositories/urlsRepo.js"
 
 const shorten = async (req,res) => {
     const { url } = req.body;
@@ -29,7 +29,7 @@ const shorten = async (req,res) => {
 };
 
 const getUrlById = async (req,res) => {
-    const  id  = parseInt(req.params.id);
+    const id  = parseInt(req.params.id);
     if(isNaN(id)) return res.sendStatus(404);
     try{
         const { rows:link } = await getOneLinkById([id]);
@@ -59,16 +59,17 @@ const openUrl = async (req,res) => {
 }
 
 const deleteLink = async (req,res) => {
-    const { id } = req.params;
-    const { userId } = res.locals;
+    const id  = parseInt(req.params.id);
     if(isNaN(id)) return res.sendStatus(404);
+    const { userId } = res.locals;
+
     try{
         const { rows:link } = await getOneLinkById([id]);
 
         if(link.length === 0) return res.sendStatus(404);
-        if(link.userId !== userId) return res.sendStatus(401);
+        if(link[0].userId !== userId) return res.sendStatus(401);
 
-        await deleteUserLink([id]);
+        await deleteUserLink(link[0].id);
 
         res.sendStatus(204);
     }catch(error){

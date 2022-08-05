@@ -13,10 +13,14 @@ const newLink = async (queryParams) => await connection.query(`INSERT INTO links
 //Update
 const increaseVisitors = async (queryParams) => await connection.query(`UPDATE links SET "visitCount" = "visitCount" + 1 WHERE id=$1`, queryParams);
 
+//Delete
+const deleteUserLink = async (queryParams) => await connection.query(`DELETE FROM links WHERE id=$1`, [queryParams]);
+
 export {
     newLink,
     haveShorten,
     getOneLinkById,
     openShortUrl,
-    increaseVisitors
-}
+    increaseVisitors,
+    deleteUserLink
+};
