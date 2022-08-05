@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { newLink, increaseVisitors, haveShorten } from "../repositories/urlsRepo.js"
+import { newLink, increaseVisitors, haveShorten, getOneLink } from "../repositories/urlsRepo.js"
 
 const shorten = async (req,res) => {
     const { url } = req.body;
@@ -29,13 +29,13 @@ const shorten = async (req,res) => {
 };
 
 const getUrlById = async (req,res) => {
-    const { id } = req.params
+    const { id } = req.params;
     try{
-        const { rows:link } = await getOneLink('id', [id]);
-        if(link.length === 0) return res.sendStatus(401);
-        delete link.visitCount;
-        delete link.userId;
-        res.status(200).send(link);
+        const { rows:link } = await getOneLink([id]);
+        if(link.length === 0) return res.sendStatus(404);
+        delete link[0].visitCount;
+        delete link[0].userId;
+        res.status(200).send(link[0]);
     }catch(error){
         console.log("[Error] - getUrlById Controller");
         return res.sendStatus(500);
