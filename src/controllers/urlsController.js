@@ -29,6 +29,20 @@ const getUrlById = async (req,res) => {
         console.log("[Error] - getUrlById Controller");
         return res.sendStatus(500);
     }
+};
+
+const openUrl = async (req,res) => {
+    const { shortUrl } = req.params;
+    try{
+        const { rows:link } = await getOneLink('shortUlr', [shortUrl]);
+        if(link.length === 0) return res.sendStatus(404);
+        await increseVisitors([shortUrl]);
+
+        res.redirect(link.url);
+    }catch(error){
+        console.log("[Error] - getUrlById Controller");
+        return res.sendStatus(500);
+    };
 }
 
 export { shorten, getUrlById };
