@@ -1,3 +1,4 @@
+import { query } from "express";
 import { nanoid } from "nanoid";
 import { newLink, increaseVisitors } from "../repositories/urlsRepo.js"
 
@@ -45,4 +46,22 @@ const openUrl = async (req,res) => {
     };
 }
 
-export { shorten, getUrlById };
+const deleteLink = async (req,res) => {
+    const { id } = req.params;
+    const { userId } = res.locals;
+    try{
+        const { rows:link } = await getOneLink('id', [id]);
+        
+        if(link.length === 0) return res.sendStatus(404);
+        if(link.userId !== userId) return res.sendStatus(401);
+
+        await deleteUserLink([id]);
+
+        res.sendStatus(204);
+    }catch(error){
+        console.log("[Error] - getUrlById Controller");
+        return res.sendStatus(500);
+    }
+};
+
+export { shorten, getUrlById, openUrl, deleteLink};
