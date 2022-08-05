@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { newLink, increaseVisitors } from "../repositories/urlsRepo.js"
+import { newLink, increaseVisitors, haveShorten } from "../repositories/urlsRepo.js"
 
 const shorten = async (req,res) => {
     const { url } = req.body;
@@ -7,18 +7,25 @@ const shorten = async (req,res) => {
     const shortUrl = nanoid(8);
     const queryParams = [
         userId,
-        shortUrl,
-        url,
-        0
+        url
     ];
-    console.log(queryParams)
-    // try{
+
+    try{
+        const { rows: userLink } = await haveShorten(queryParams);
+        if(userLink.length !== 0) return res.status(422).send({
+            url : `User already have this url shortned`
+        })
+
+        queryParams.splice(1,0, shortUrl);
+        queryParams.push(0);
+
         await newLink(queryParams);
+
         res.status(200).send({shortUrl: shortUrl});
-    // }catch(error){
-    //     console.log("[Error] - shorten Controller");
-    //     return res.sendStatus(500);
-    // };
+    }catch(error){
+        console.log("[Error] - shorten Controller");
+        return res.sendStatus(500);
+    };
 };
 
 const getUrlById = async (req,res) => {
