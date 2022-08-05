@@ -16,6 +16,15 @@ const shorten = async (req,res) => {
         console.log("[Error] - signUp Controller");
         return res.sendStatus(500);
     };
+};
+
+const getUrlById = async (req,res) => {
+    const { id } = req.params
+    try{
+        const { rows:link } = await getOneLink([id]);
+        delete link.visitCount;
+        res.status(200).send(link);
+    }
 }
 
 export { shorten };
