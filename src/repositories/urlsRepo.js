@@ -1,17 +1,26 @@
 import connection from "../setup/database.js"
 
-//Post url
-const newLink = async (queryParams) => await connection.query(`INSERT INTO links ("userId", "shortUrl", url, "visitCount") VALUES ($1, $2, $3, $4)`, queryParams);
-
+//Selects
 const haveShorten = async(queryParams) => await connection.query(`SELECT * FROM links WHERE "userId"=$1 AND "url"=$2`, queryParams);
 
-//Get
-const getOneLink = async (queryParams) => await connection.query(`SELECT * FROM links WHERE id=$1`, queryParams);
+const getOneLinkById = async (queryParams) => await connection.query(`SELECT * FROM links WHERE id=$1`, queryParams);
 
-const increaseVisitors = async (queryParams) => await connection.query(`UPDATE links SET "visitCount" = "visitCount" + 1 WHERE id=$1`, queryParams)
+const openShortUrl = async (queryParams) => connection.query(`SELECT * FROM links WHERE "shortUrl"=$1`, queryParams);
+
+// Insert Into
+const newLink = async (queryParams) => await connection.query(`INSERT INTO links ("userId", "shortUrl", url, "visitCount") VALUES ($1, $2, $3, $4)`, queryParams);
+
+//Update
+const increaseVisitors = async (queryParams) => await connection.query(`UPDATE links SET "visitCount" = "visitCount" + 1 WHERE id=$1`, queryParams);
+
+//Delete
+const deleteUserLink = async (queryParams) => await connection.query(`DELETE FROM links WHERE id=$1`, [queryParams]);
+
 export {
     newLink,
     haveShorten,
-    getOneLink,
-    increaseVisitors
-}
+    getOneLinkById,
+    openShortUrl,
+    increaseVisitors,
+    deleteUserLink
+};
