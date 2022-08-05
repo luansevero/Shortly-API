@@ -13,7 +13,7 @@ const shorten = async (req,res) => {
         await newLink(queryParams);
         res.status(200).send({shortUrl: shortUrl});
     }catch(error){
-        console.log("[Error] - signUp Controller");
+        console.log("[Error] - shorten Controller");
         return res.sendStatus(500);
     };
 };
@@ -24,7 +24,10 @@ const getUrlById = async (req,res) => {
         const { rows:link } = await getOneLink([id]);
         delete link.visitCount;
         res.status(200).send(link);
+    }catch(error){
+        console.log("[Error] - getUrlById Controller");
+        return res.sendStatus(500);
     }
 }
 
-export { shorten };
+export { shorten, getUrlById };
