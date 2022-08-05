@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { newLink } from "../repositories/urlsRepo.js"
+import { newLink, increaseVisitors } from "../repositories/urlsRepo.js"
 
 const shorten = async (req,res) => {
     const { url } = req.body;
@@ -36,7 +36,7 @@ const openUrl = async (req,res) => {
     try{
         const { rows:link } = await getOneLink('shortUlr', [shortUrl]);
         if(link.length === 0) return res.sendStatus(404);
-        await increseVisitors([shortUrl]);
+        await increaseVisitors([link.id]);
 
         res.redirect(link.url);
     }catch(error){
