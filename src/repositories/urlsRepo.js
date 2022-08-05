@@ -9,5 +9,6 @@ const getOneLink = async (value, queryParams) => await connection.query(`SELECT 
 const increaseVisitors = async (queryParams) => await connection.query(`UPDATE links SET visitCount = visitCount + 1 WHERE id=$1`, queryParams)
 export {
     newLink,
-    getOneLink
+    getOneLink,
+    increaseVisitors
 }
