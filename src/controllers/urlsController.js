@@ -22,6 +22,7 @@ const getUrlById = async (req,res) => {
     const { id } = req.params
     try{
         const { rows:link } = await getOneLink([id]);
+        if(link.length === 0) return res.sendStatus(401);
         delete link.visitCount;
         res.status(200).send(link);
     }catch(error){
