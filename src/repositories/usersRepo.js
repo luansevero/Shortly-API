@@ -1,4 +1,6 @@
-import connection from "../setup/database.js"
+import connection from "../setup/database.js";
+
+const getUserById = async (queryParams) => await connection.query(`SELECT id, name FROM users WHERE id=$1`, queryParams)
 
 const getAllUrlByUser = async (queryParams) => {
     return await connection.query(`
@@ -12,6 +14,7 @@ const getAllUrlByUser = async (queryParams) => {
                 'url', l.url,
                 'visitCount', l."visitCount"
             )
+            ORDER BY l.id
         )
         FROM links l
         WHERE l."userId" = u.id
@@ -20,10 +23,15 @@ const getAllUrlByUser = async (queryParams) => {
     JOIN links l
     ON u."id" = l."userId"
     WHERE u.id = $1
-    GROUP BY u.id, l."userId"`,
+    GROUP BY u.id, l."userId"
+    `,
     queryParams)
 }
 
 export {
-    getAllUrlByUser
+    getAllUrlByUser,
+    getUserById
 };
+
+
+
